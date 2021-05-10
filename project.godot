@@ -1,0 +1,68 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Big",
+"language": "GDScript",
+"path": "res://Big.gd"
+}, {
+"base": "TextureRect",
+"class": "Entity",
+"language": "GDScript",
+"path": "res://code/Entity.gd"
+}, {
+"base": "Node",
+"class": "Ticker",
+"language": "GDScript",
+"path": "res://code/Ticker.gd"
+} ]
+_global_script_class_icons={
+"Big": "",
+"Entity": "",
+"Ticker": ""
+}
+
+[application]
+
+config/name="Cult Industry"
+config/icon="res://icon.png"
+
+[autoload]
+
+SimMgr="*res://code/SimMgr.gd"
+
+[display]
+
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[input]
+
+mouseDrag={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+mouseConnect={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[physics]
+
+common/physics_fps=20
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+2d/options/use_nvidia_rect_flicker_workaround=true
+environment/default_environment="res://default_env.tres"

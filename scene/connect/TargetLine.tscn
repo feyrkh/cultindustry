@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scene/ui/Pulser.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scene/connect/TargetLine.gd" type="Script" id=2]
+[ext_resource path="res://img/target.png" type="Texture" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "pulse"
+length = 2.25
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:width")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.75, 1, 1.25, 1.5, 1.8 ),
+"transitions": PoolRealArray( 1, 3, 0.33, 3, 0.33, 3, 0.33 ),
+"update": 0,
+"values": [ 1.0, 5.0, 1.0, 5.0, 1.0, 5.0, 1.0 ]
+}
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Sprite
+
+const MAX_DISTANCE_TO_HIGHLIGHT_LINE = 30
+
+var defaultScale = scale
+var zoom = Vector2.ONE
+var progress = 0.0
+var mirrorPoint
+var mirrorVisible = true
+var parentLine
+
+func _ready():
+	if !parentLine:
+		parentLine = get_parent()
+	if !mirrorPoint:
+		mirrorPoint = parentLine.find_node('MirrorPoint')
+	defaultScale = scale
+	mirrorPoint.scale = scale
+	Event.connect('chakraZoom', self, 'on_zoom')
+
+func _process(delta):
+	if visible and global_position.distance_to(get_global_mouse_position()) > max(30, MAX_DISTANCE_TO_HIGHLIGHT_LINE*zoom.x):
+		visible = false
+	mirrorPoint.visible = self.visible and mirrorVisible
+
+func on_zoom(zoom):
+	self.zoom = zoom
+	scale = zoom * defaultScale
+	mirrorPoint.scale = scale
+	#entityNameLabel.rect_position.x = centerX - (entityNameLabel.rect_size.x/2 * zoom.x)
+"
+
+[node name="TargetLine" type="Line2D" groups=[
+"targetLine",
+]]
+points = PoolVector2Array( -2.76578, 0.0791321, 112.149, -0.330723, 197.11, -0.0256538 )
+width = 5.0
+default_color = Color( 1, 1, 1, 0.588235 )
+joint_mode = 2
+antialiased = true
+script = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/pulse = SubResource( 1 )
+
+[node name="ClosestPoint" type="Sprite" parent="." groups=[
+"closestPoint",
+]]
+modulate = Color( 1, 1, 1, 0.721569 )
+position = Vector2( -0.0576191, -0.0261632 )
+scale = Vector2( 0.06, 0.06 )
+texture = ExtResource( 3 )
+script = SubResource( 2 )
+
+[node name="MirrorPoint" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.721569 )
+position = Vector2( -0.0576191, -0.0261632 )
+scale = Vector2( 0.03, 0.03 )
+texture = ExtResource( 3 )
+
+[node name="Midpoint" type="Sprite" parent="."]
+position = Vector2( 112.386, -0.355935 )
+scale = Vector2( 0.05, 0.05 )
+texture = ExtResource( 3 )
+
+[node name="Pulser" parent="Midpoint" instance=ExtResource( 1 )]
+enabled = true
+periodSeconds = 2.0
+
+[node name="BlockIndicator" type="Sprite" parent="."]
+position = Vector2( 104.689, -3.05236 )
+scale = Vector2( 0.75, 0.75 )
+z_index = 30
+offset = Vector2( -3.5, -2.5 )
+
+[node name="BlockIndicatorLabel" type="Label" parent="."]
+visible = false
+anchor_left = 2.16677
+anchor_top = 0.718268
+anchor_right = 2.16677
+anchor_bottom = 0.718268
+margin_left = 113.738
+margin_top = -4.37756
+margin_right = 154.878
+margin_bottom = 9.62244
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

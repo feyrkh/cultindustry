@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scene/Entity.tscn" type="PackedScene" id=1]
-[ext_resource path="res://scene/BackgroundDropTarget.gd" type="Script" id=2]
+[ext_resource path="res://scene/entity/Cultist.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scene/entity/Portal.tscn" type="PackedScene" id=2]
 [ext_resource path="res://code/SimMgr.gd" type="Script" id=3]
 
 [node name="Game" type="Node"]
@@ -9,30 +9,13 @@
 [node name="SimMgr" type="Node" parent="."]
 script = ExtResource( 3 )
 
-[node name="BackgroundDropTarget" type="MarginContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="cultist" parent="." instance=ExtResource( 1 )]
+position = Vector2( 166.988, 84.6067 )
 
-[node name="Portal" parent="." instance=ExtResource( 1 )]
-anchor_right = 0.0
-margin_left = 61.4026
-margin_top = 36.0407
-margin_right = 300.403
-margin_bottom = 422.041
-draggable = true
-connectable = true
-tickable = true
+[node name="cultist2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 311.401, 173.803 )
 
-[node name="Portal2" parent="." instance=ExtResource( 1 )]
-anchor_right = 0.0
-margin_left = 527.262
-margin_top = 13.3484
-margin_right = 766.262
-margin_bottom = 399.348
-draggable = true
-connectable = true
-tickable = true
+[node name="cultist3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 120.266, 336.149 )
+
+[node name="Portal" parent="." instance=ExtResource( 2 )]

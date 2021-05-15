@@ -14,35 +14,45 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Big.gd"
 }, {
-"base": "TextureRect",
+"base": "Area2D",
+"class": "DragTarget",
+"language": "GDScript",
+"path": "res://scene/connect/DragTarget.gd"
+}, {
+"base": "Node2D",
 "class": "Entity",
 "language": "GDScript",
-"path": "res://code/Entity.gd"
+"path": "res://scene/entity/Entity.gd"
+}, {
+"base": "TextureRect",
+"class": "TargetLineFocus",
+"language": "GDScript",
+"path": "res://scene/connect/TargetLineFocus.gd"
 }, {
 "base": "Node",
 "class": "Ticker",
 "language": "GDScript",
-"path": "res://code/Ticker.gd"
+"path": "res://scene/Ticker.gd"
 } ]
 _global_script_class_icons={
 "Big": "",
+"DragTarget": "",
 "Entity": "",
+"TargetLineFocus": "",
 "Ticker": ""
 }
 
 [application]
 
-config/name="Cult Industry"
+config/name="Cultindustry"
+run/main_scene="res://scene/Game.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 SimMgr="*res://code/SimMgr.gd"
-
-[display]
-
-window/stretch/mode="2d"
-window/stretch/aspect="keep"
+Event="*res://code/Event.gd"
+DragDropController="*res://DragDropController.tscn"
 
 [input]
 
@@ -56,13 +66,24 @@ mouseConnect={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+mapDrag={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":3,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[layer_names]
+
+2d_physics/layer_1="entity"
+2d_physics/layer_2="entityPreview"
 
 [physics]
 
-common/physics_fps=20
 common/enable_pause_aware_picking=true
 
 [rendering]
 
-2d/options/use_nvidia_rect_flicker_workaround=true
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
 environment/default_environment="res://default_env.tres"

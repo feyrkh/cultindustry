@@ -26,6 +26,12 @@ func register_drop_target(droppableArea, droppableOwner):
 	droppableArea.connect("mouse_entered",self,"mouse_entered_drop",[droppableOwner])
 	droppableArea.connect("mouse_exited",self,"mouse_exited_drop",[droppableOwner])
 	droppableArea.connect("input_event",self,"input_event_drop",[droppableOwner])
+
+func get_top_drop_candidate(drop_source):
+	for drop_candidate in drop_candidates:
+		if drop_candidate.has_method("is_valid_drop_source") and drop_candidate.is_valid_drop_source(drop_source):
+			return drop_candidate
+	return null
 	
 func _process(_delta):
 	# If we have a preview, move it to the current mouse position
@@ -45,6 +51,7 @@ func start_drag():
 	if current.has_method("can_start_drag"):
 		if !current.can_start_drag(current_button):
 			cancel_drag()
+			return
 	if current.has_method("on_start_drag"):
 		current.on_start_drag(current_button)
 	if current.has_method("get_drag_preview"):
@@ -54,8 +61,10 @@ func start_drag():
 		current_preview.modulate = Color(1, 1, 1, 0.3)
 	current.raise()
 	get_tree().root.add_child(current_preview)
-	if current_preview and current_preview.has_method("setup_preview"):
+	if current_preview.has_method("setup_preview"):
 		current_preview.setup_preview()
+	if current_preview.previewed_owner == null:
+		current_preview.previewed_owner = current
 
 func cancel_drag():
 	current_button = null
@@ -74,37 +83,32 @@ func mouse_entered_drag(which):
 	if which.has_method('is_drag_preview'): 
 		return
 	drag_candidates.append(which)
-	drop_candidates.erase(null)
 	drag_candidates.sort_custom(self, "depth_sort")
 	print_debug("entered draggable")
-	pass
 
 func mouse_exited_drag(which):
 	drag_candidates.erase(which)
-	drop_candidates.erase(null)
 	print_debug("exited draggable")
-	pass
 
 func mouse_entered_drop(which):
 	drop_candidates.append(which)
-	drop_candidates.erase(null)
-	drop_candidates.sort_custom(self, "depth_sort")
-	pass
+	recalculate_drop_target()
+	print_debug("entered droppable")
 
 func mouse_exited_drop(which):
-	drop_candidates.erase(null)
 	drop_candidates.erase(which)
-	pass
+	recalculate_drop_target()
+	print_debug("exited droppable")
 
+func recalculate_drop_target():
+	drop_candidates.sort_custom(self, "depth_sort")
+	current_drop_target = drop_candidates.back()
+	
 func input_event_drag(viewport: Node, event: InputEvent, shape_idx: int, which:Node2D):
 	if !(event is InputEventMouseButton):
 		return
 		
 	# If we're not dragging and this is a mouse-down, check to see if we should start dragging
-	print("Current: ", current)
-	print("Potential: ", potential_drag_node)
-	print("Event: ", event.is_pressed())
-	print("Drag candidates: ", drag_candidates)
 	if !current and !potential_drag_node and event.is_pressed() and !drag_candidates.empty():
 		print_debug("Possibly starting drag for ", event.button_index)
 		current_button = event.button_index

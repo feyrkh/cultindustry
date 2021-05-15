@@ -12,6 +12,7 @@ position = Vector2( 51.3217, 50.3722 )
 texture = ExtResource( 1 )
 script = ExtResource( 3 )
 is_connection_source = false
+is_connection_target = true
 
 [node name="DragTarget" parent="." instance=ExtResource( 2 )]
 
